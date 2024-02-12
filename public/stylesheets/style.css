@@ -52,6 +52,12 @@ a {
 #typingindicator{
   position: absolute;
   /* background-color: red; */
-  top: 595px;
+  top: 600px;
   right: 74px;
+}
+
+#numberofusers{
+  position: absolute;
+  right: 40px;
+  top: 60px;
 }

@@ -8,19 +8,22 @@
 </head>
 <body>
   <h1>Chatting App</h1>
+  <h2 id="numberofusers"></h2>
   <h3 id="Nickname">Edit Nickname</h3>
   <input type="text" placeholder="Enter your message" id="input">
   <button id="button">Send</button>
   <div class="messagesbox" id="messagesbox">
   </div>
   <div class="typingindicator" id="typingindicator">
-    <p id="typingindicatorp">asd</p>
+    <p id="typingindicatorp"></p>
   </div>
   <script src="/socket.io/socket.io.js"></script>
     <script>
       const socket = io();
       let emiitednick;
-      let nickname = prompt("Please enter Your nickname");
+      // let nickname = prompt("Please enter Your nickname");
+      const urlParams = new URLSearchParams(window.location.search);
+      let nickname = urlParams.get('username');
       
       function editnickname(){
         document.getElementById('Nickname').innerHTML = nickname
@@ -40,17 +43,26 @@
       
       const button = document.getElementById('button');
 
-      socket.on('emiited-nickname',(emiitednickname)=>{
-        emiitednick = emiitednickname;
-      })
+      // socket.on('emitted-nickname',(emiitednickname)=>{
+      //   emiitednick = emiitednickname;
+      // })
       socket.on('emitted-message',(message)=>{
-        console.log(emiitednick);
+        // console.log(emiitednick);
         
         const e = document.createElement("p");
         e.style.color = 'red';
         e.style.fontWeight='bold'
         e.style.fontFamily='Lucida Sans'
-        e.innerText = message.nickname + "- " + message.message;
+        
+        if(message.nickname == nickname){
+          e.style.textAlign = 'right'
+          e.innerText = "You : " + message.message;
+          
+        }
+        else{
+          e.innerText = message.nickname + "- " + message.message;
+        }
+        
         // e.innerText = message.message;
         document.querySelector('.messagesbox').appendChild(e);
     
@@ -84,15 +96,35 @@
       const typingIndicator = document.getElementById('typingindicator');
 
       function typing(){
-        input.addEventListener('input',function(){
-          socket.emit('typing',nickname)
-        })
+        input.addEventListener('focus',function(){
+          socket.emit('typing',{ feedback:`${nickname} is typing a message`})  
+        });
+        input.addEventListener('keypress',function(){
+          socket.emit('typing',{ feedback:`${nickname} is typing a message`})
+        });
+        input.addEventListener('blur',function(){
+          socket.emit('typing',{feedback:''})});
+        
 
       }
       typing();
 
-      socket.on('typer',(typernickname)=>{
-        document.getElementById("typingindicatorp").innerText = `${typernickname} is typing...`;
+      socket.on('typer',(data)=>{
+
+        document.getElementById("typingindicatorp").innerText = data.feedback;
+
+      })
+
+      socket.on('user-left',(disconnectedNickname)=>{
+        const p =  document.createElement("p");
+        p.style.color = 'black';
+        p.style.fontWeight='bold'
+        p.innerText = disconnectedNickname + "                 left The Chat"
+        document.querySelector('.messagesbox').appendChild(p);
+      })
+
+      socket.on('connectedUsersSize',(length)=>{
+        document.getElementById("numberofusers").innerText =  `Number of users online : ${length}` ;
       })
 
     </script>

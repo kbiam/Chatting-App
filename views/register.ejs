@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/stylesheets/register.css">
+</head>
+<body>
+    <div class="page">
+        <div class="center">
+            <h1>Welcome 👋</h1>
+            <p>Set a Username to get started</p>
+            <input type="text"  placeholder="Username" id="inputnick"><br>
+            <button onclick="redirect()">Enter</button>
+        </div>
+
+    </div>
+    <script>
+        function redirect(){
+            const nickname = document.getElementById('inputnick').value;
+            if(nickname){
+            window.location.href = `http://localhost:3001/?username=${encodeURIComponent(nickname)}`;
+            }
+            else{
+                alert("Please Enter a Username")
+            }
+        }
+
+
+
+    </script>
+
+</body>
+</html>

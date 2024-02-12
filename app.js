@@ -45,10 +45,15 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+const connectedUsers = {};
 io.on('connection', (socket) => {
   socket.on('nickname',(nickname)=>{
-    io.emit('emiited-nickname',nickname);
-    io.emit('new connection',nickname);
+    // io.emit('emitted-nickname',nickname);
+    connectedUsers[socket.id] = nickname;
+    socket.broadcast.emit('new connection',nickname);
+
+    io.emit('connectedUsersSize', Object.keys(connectedUsers).length);
+
 
   });
   socket.on('user-message',(messages)=>{
@@ -56,9 +61,18 @@ io.on('connection', (socket) => {
     // console.log('message: ' + messages);
   })
   socket.on('typing',(nickname)=> {
-    io.emit('typer',nickname)
+    socket.broadcast.emit('typer',nickname)
 
 });
+  socket.on('disconnect', () => {
+    const disconnectedNickname = connectedUsers[socket.id];
+    if (disconnectedNickname) {
+      socket.broadcast.emit('user-left', disconnectedNickname);
+      delete connectedUsers[socket.id];
+
+      io.emit('connectedUsersSize', Object.keys(connectedUsers).length);
+
+}})
 })
 
 server.listen(3001);

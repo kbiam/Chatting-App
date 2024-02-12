@@ -1,0 +1,63 @@
+body{
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+.page{
+    height: 100vh;
+    width: 100vw;
+    background: #070707;  /* fallback for old browsers */
+    /* background: -webkit-linear-gradient(to right, #1F1C18, #8E0E00);  Chrome 10-25, Safari 5.1-6 */
+    /* background: linear-gradient(to right, #13110e, #5e0a01); W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    
+
+}
+.center{
+    /* background-color: red; */
+    display: inline-block;
+    position: absolute;
+    top: 45%;
+    left: 35%;
+    transform: translate(-50%,-50%);
+    font-size: 27px;
+    line-height: 25px;
+    justify-content: center;
+    text-align: start;
+}
+.center h1{
+    color: white;
+}
+.center p{
+    font-size: 20px;
+    margin-bottom: 25px;
+    color: grey;
+}
+.center input{
+    width: 350px;
+    height: 45px;
+    padding: 5px 20px;
+    border-radius: 8px;
+    border: 1px solid rgb(243, 243, 243);
+    margin-bottom: 15px;
+    background-color: rgb(15, 15, 15);
+    color: white;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+    
+}
+.center button{
+    width: 395px;
+    height: 45px;
+    padding: 5px 20px;
+    border-radius: 8px;
+    border: 1px solid black;
+    font-size: 14px;
+    background-color: orangered;
+    color: white;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    cursor: pointer;
+
+
+}
