@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+</head>
+<body>
+  <h1>Chatting App</h1>
+  <h3 id="Nickname">Edit Nickname</h3>
+  <input type="text" placeholder="Enter your message" id="input">
+  <button id="button">Send</button>
+  <div class="messagesbox" id="messagesbox">
+  </div>
+  <div class="typingindicator" id="typingindicator">
+    <p id="typingindicatorp">asd</p>
+  </div>
+  <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      let emiitednick;
+      let nickname = prompt("Please enter Your nickname");
+      
+      function editnickname(){
+        document.getElementById('Nickname').innerHTML = nickname
+        document.getElementById('Nickname').addEventListener('click',function(){
+
+          nickname = prompt("Please enter Your nickname");
+          if(nickname != null){
+            document.getElementById('Nickname').innerHTML = nickname;
+            socket.emit('nickname',nickname);
+          }else{
+            alert("You didn't write a nickname");
+        }})
+      };
+      
+      editnickname();
+      socket.emit('nickname',nickname);
+      
+      const button = document.getElementById('button');
+
+      socket.on('emiited-nickname',(emiitednickname)=>{
+        emiitednick = emiitednickname;
+      })
+      socket.on('emitted-message',(message)=>{
+        console.log(emiitednick);
+        
+        const e = document.createElement("p");
+        e.style.color = 'red';
+        e.style.fontWeight='bold'
+        e.style.fontFamily='Lucida Sans'
+        e.innerText = message.nickname + "- " + message.message;
+        // e.innerText = message.message;
+        document.querySelector('.messagesbox').appendChild(e);
+    
+        // else{
+        //   const a = document.createElement("p")
+        //   a.style.color = 'green'
+        //   a.style.fontWeight = 'bold'
+        //   a.style.fontFamily='Lucida Sans'
+        //   a.innerText = message.message;
+        //   document.querySelector('.sendingmessages').appendChild(a);
+
+        // }
+
+      });
+      socket.on('new connection',(nickname)=>{
+        const p =  document.createElement("p");
+        p.style.color = 'black';
+        p.style.fontWeight='bold'
+        p.innerText = nickname + "                 Joined The Chat"
+        document.querySelector('.messagesbox').appendChild(p);
+      });
+
+      const msg = document.getElementById('input');
+      button.addEventListener('click',function(){
+  
+        socket.emit('user-message',{ message: msg.value, nickname: nickname });
+      })
+
+
+      const input = document.getElementById('input');
+      const typingIndicator = document.getElementById('typingindicator');
+
+      function typing(){
+        input.addEventListener('input',function(){
+          socket.emit('typing',nickname)
+        })
+
+      }
+      typing();
+
+      socket.on('typer',(typernickname)=>{
+        document.getElementById("typingindicatorp").innerText = `${typernickname} is typing...`;
+      })
+
+    </script>
+</body>
+</html>
